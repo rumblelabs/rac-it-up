@@ -11,7 +11,7 @@
 - Functional reactive programming framework for ObjC
 - Currently 2.3.1
 - Inspired by Reactive Extensions
-- Alternative to traditional KVO paradigm
+- Alternative to traditional KVO paradigm / completion block as last argument
 - Created by GitHub & used in GitHub for Mac (Hi Coby!)
 
 ***
@@ -37,15 +37,13 @@
 - Chain dependent operations
 - Parallelise independent work
 - Simplify collection transformations
-- Manage state
+- Manage and minimise state
 
 ***
 
 # Our Example
 
-^We'll build a simple login form with validation and show how the UI can respond dynamically to user input.
-
-^At the end, we'll show a more complex example by mocking up how the form could be sent via a network request reactively.
+^ We'll build a simple login form with validation and show how the UI can respond dynamically to user input, then submit the form via a network request.
 
 - Login form
 - Field validation
@@ -186,17 +184,20 @@ ReactiveCocoa offers lots of logic as signals
 
   `UIButton`, `UIBarButtonItem`, `UIRefreshControl`, `rac_command` property
 
+***
+
 # Other categories / alternatives
 
 - Timers
 
-  `[RACSignal interval:onScheduler:]`, `[RACSignal delay:]`
+  `[RACSignal interval:onScheduler:]`
+  `[RACSignal delay:]`
 
 - NSNotificationCenter
 
   `[NSNotificationCenter rac_addObserverForName:object:]`
 
-- @weakify/@strongify macros are helpful
+- `@weakify` / `@strongify` macros are helpful
 
 ***
 
@@ -207,10 +208,9 @@ ReactiveCocoa offers lots of logic as signals
 
 For example:
 
-- UIGestureRecogniser
-- UIAlertView
+- UIGestureRecogniser (`rac_gestureSignal`)
+- UIAlertView (`rac_buttonClickedSignal`)
 - Note: can't be used if delegate method returns a value :pensive:
-
 
 ***
 
@@ -248,18 +248,6 @@ E.g. cancelling an ongoing network request.
 Chaining dependent, asynchronous operations allows for streamlining complex tasks
 
 E.g. a network operation that needs to do a number of fetches
-
-
-***
-
-# Schedulers
-
-- Main (Background by default?)
-- Delays
-- Intervals
-- Repeats
-- Retrys
-- Throttling
 
 ***
 
