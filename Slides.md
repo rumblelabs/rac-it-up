@@ -88,6 +88,8 @@ ReactiveCocoa provides categories to help like `rac_textSignal` for `UITextField
 
 Let's see how this works...
 
+^ tag: 1
+
 ***
 
 # Operations (2)
@@ -126,6 +128,8 @@ Logic automatically updates UI
 
 Like CocoaBindings for iOS and Mac
 
+^ tag: 2
+
 ***
 
 # Combining Signals (3)
@@ -142,11 +146,10 @@ The operator `combineLatest:reduce:` helps
 ^ Could use `map:` and receive and unpack a tuple to operate on.
 ^ This is a common use case though, `combineLatest:reduce:` will take a block with as many arguments as input signals
 
-The `combineLatest:` operator takes an array
+The `combineLatest:` operator takes an array of signals
+So, `reduce:` maps a tuple to block arguments
 
-Variable length
-
-So, `reduce:` needs a tuple
+^ tag: 3
 
 ***
 
@@ -162,6 +165,8 @@ Let's rewrite our form validation...
 
 # Moar Logic (4)
 
+^ if:then:else 
+
 ReactiveCocoa offers lots of logic as signals
 
 - and
@@ -169,6 +174,8 @@ ReactiveCocoa offers lots of logic as signals
 - not
 - switch:cases:default:
 - if:then:else:
+
+^ tag: 4
 
 ***
 
@@ -186,7 +193,7 @@ ReactiveCocoa offers lots of logic as signals
 
 ***
 
-# Other categories / alternatives
+# Other categories / alternatives (5)
 
 - Timers
 
@@ -212,21 +219,23 @@ For example:
 - UIAlertView (`rac_buttonClickedSignal`)
 - Note: can't be used if delegate method returns a value :pensive:
 
-***
-
-# Sequences
-
-^Underscore AND RAC - Why not use both?
-
-- Some other libs provide collection operations, e.g. Underscore
-- Working with signals allows for chaining though
-- Filtering, mapping etc.
-- Collections are treated as streams
-- Lazily executed
+^ tag: 5
 
 ***
 
-# Disposables
+# The chain will keep us together (6)
+
+^Or a background process that must write files, delete duplicates and then upload
+
+Chaining dependent, asynchronous operations allows for streamlining complex tasks
+
+E.g. a network operation that needs to do a number of fetches
+
+^ tag: 6
+
+***
+
+# Disposables (7)
 
 ^ Disposables are related to subscriptions
 ^ They encapsulate any clean-up necessary when a signal is being torn down (through error, completion or unsubscription)
@@ -239,15 +248,19 @@ Can be useful for cancelling any ongoing work.
 
 E.g. cancelling an ongoing network request.
 
+^ tag: 7
+
 ***
 
-# The chain will keep us together (6)
+# Sequences
 
-^Or a background process that must write files, delete duplicates and then upload
+^ Underscore AND RAC - Why not use both?
 
-Chaining dependent, asynchronous operations allows for streamlining complex tasks
-
-E.g. a network operation that needs to do a number of fetches
+- Some other libs provide collection operations, e.g. Underscore
+- Working with signals allows for chaining though
+- Filtering, mapping etc.
+- Collections are treated as streams
+- Lazily executed
 
 ***
 
