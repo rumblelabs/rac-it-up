@@ -11,6 +11,7 @@
 #import <RACAFNetworking.h>
 
 #import <UIAlertView+RACSignalSupport.h>
+#import <UIBarButtonItem+RACCommandSupport.h>
 #import "UINavigationItem+indicateActivityWithSignal.h"
 
 @interface RMBLoginTableViewController ()
@@ -41,12 +42,22 @@
   
   
   // 5. No delegates, or target:selector patterns
-  
+
+  RACCommand *cancelCommand = [[RACCommand alloc] initWithSignalBlock:^(id _) {
+    return [RACSignal empty];
+  }];
+
+  self.cancelButton.rac_command = cancelCommand;
+
   @weakify(self);
   RACCommand *loginCommand = [[RACCommand alloc] initWithEnabled:wholeFormIsValid
                                                      signalBlock:^(UIButton *sender) {
                                                        @strongify(self);
-                                                       return [self login];
+
+                                                       RACSignal *cancellation = [cancelCommand.executionSignals take:1];
+                                                       RACSignal *loginSignal = [self login];
+
+                                                       return [loginSignal takeUntil:cancellation];
                                                      }];
   
   self.loginButton.rac_command = loginCommand;
