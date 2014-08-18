@@ -12,26 +12,29 @@
 @implementation UINavigationItem (indicateActivityWithSignal)
 
 - (RACSignal *)rmb_indicateActivityWithSignal:(RACSignal *)signal {
-  __block UIView *previousTitleView;
-  __block BOOL didHideBackButton;
-
   UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 
-  @weakify(self);
-  return [[[RACSignal defer:^{
-    return [activityIndicator rmb_animateWithSignal:signal];
-  }] initially:^{
-    @strongify(self);
-    previousTitleView = self.titleView;
-    didHideBackButton = self.hidesBackButton;
+  return [[RACSignal createSignal:^(id<RACSubscriber> subscriber) {
+    RACSignal *animated = [activityIndicator rmb_animateWithSignal:signal];
+
+    UIView *previousTitleView = self.titleView;
+    BOOL didHideBackButton = self.hidesBackButton;
 
     self.titleView = activityIndicator;
     self.hidesBackButton = YES;
-  }] finally:^{
-    @strongify(self);
-    self.titleView = previousTitleView;
-    self.hidesBackButton = didHideBackButton;
-  }];
+
+    RACDisposable *indicatorDisposable = [animated subscribe:subscriber];
+
+    RACDisposable *titleViewDisposable = [RACDisposable disposableWithBlock:^{
+      self.titleView = previousTitleView;
+      self.hidesBackButton = didHideBackButton;
+    }];
+
+    return [RACCompoundDisposable compoundDisposableWithDisposables:@[
+      indicatorDisposable,
+      titleViewDisposable
+    ]];
+  }] setNameWithFormat:@"[%@] -rmb_indicateActivityWithSignal: %@", self, signal];
 }
 
 @end

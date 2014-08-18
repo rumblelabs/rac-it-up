@@ -11,13 +11,14 @@
 @implementation UIActivityIndicatorView (animateWithSignal)
 
 - (RACSignal *)rmb_animateWithSignal:(RACSignal *)signal {
-  @weakify(self);
-  return [[[signal initially:^{
-    @strongify(self);
+  return [[RACSignal createSignal:^(id<RACSubscriber> subscriber) {
+    [signal subscribe:subscriber];
+
     [self startAnimating];
-  }] finally:^{
-    @strongify(self);
-    [self stopAnimating];
+
+    return [RACDisposable disposableWithBlock:^{
+      [self stopAnimating];
+    }];
   }] setNameWithFormat:@"[%@] -rmb_animateWithSignal: %@", self, signal];
 }
 
