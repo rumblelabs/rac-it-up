@@ -68,6 +68,10 @@ Three types of event:
 
 # Subscription (1)
 
+^ Mention `subscribeNext:`
+^ Discouraged to explicitly subscribe - use `RAC` macro
+^ Wide selection of operators that often can accomplish what you want instead
+
 Each event for a signal is delivered to its subscribers.
 
 Most often used is `subscribeNext:`
@@ -77,6 +81,8 @@ It takes a block which is executed for every value received
 ***
 
 # Subscription (1)
+
+^ UIKit is mostly not KVO compliant, `RAObserve`ing the `text` property on `UITextField` won't work
 
 This is like KVO but for common UIKit elements!
 
@@ -92,7 +98,7 @@ Let's see how this works...
 
 ^ Signals are lazy (or cold), so you can compose everything before running it
 
-Lots of signal operators available.
+Lots of signal operations available (`map`, `filter`, `skip`, `take`, `ignore`, `collect`, to name a few)
 
 We can use `map:` to help with form validation
 
@@ -159,11 +165,12 @@ Let's rewrite our form validation...
 # Moar Logic (4)
 
 ReactiveCocoa offers lots of logic as signals
-- if:then:else:
+
 - and
 - or
 - not
-- switch
+- switch:cases:default:
+- if:then:else:
 
 ***
 
@@ -172,9 +179,23 @@ ReactiveCocoa offers lots of logic as signals
 ^Ok, so notification center has blocks but still...
 
 - UIControlEvent
+
+  `[UIControl rac_signalForControlEvents:]`
+
 - RACCommand
+
+  `UIButton`, `UIBarButtonItem`, `UIRefreshControl`, `rac_command` property
+
+# Other categories / alternatives
+
 - Timers
+
+  `[RACSignal interval:onScheduler:]`, `[RACSignal delay:]`
+
 - NSNotificationCenter
+
+  `[NSNotificationCenter rac_addObserverForName:object:]`
+
 - @weakify/@strongify macros are helpful
 
 ***
@@ -193,7 +214,7 @@ For example:
 
 ***
 
-# Collections
+# Sequences
 
 ^Underscore AND RAC - Why not use both?
 
@@ -205,16 +226,12 @@ For example:
 
 ***
 
-# Collections
-
-
-
-***
-
 # Disposables
 
-^(i.e. cleanup to be performed when the subscription ends).
-^From the previous examples, removing KVO or notification observers added.
+^ Disposables are related to subscriptions
+^ They encapsulate any clean-up necessary when a signal is being torn down (through error, completion or unsubscription)
+^ From the previous examples, removing KVO or notification observers added.
+^ A signal delivering the results of a network request would cancel the request
 
 A subscription wraps a number of disposables
 
